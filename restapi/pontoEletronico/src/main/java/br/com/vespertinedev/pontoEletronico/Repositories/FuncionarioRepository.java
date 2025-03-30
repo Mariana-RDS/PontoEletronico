@@ -44,6 +44,7 @@ public class FuncionarioRepository implements GenericRepository<FuncionarioEntit
         }
     }
 
+
     @Override
     public FuncionarioEntity read(Integer key){
         String sql = "SELECT f.*, s.nome as setor_nome FROM funcionario f " +
@@ -91,6 +92,7 @@ public class FuncionarioRepository implements GenericRepository<FuncionarioEntit
             e.printStackTrace();
         }
     }
+
 
     public List<FuncionarioEntity> readAll(){
         String sql = "SELECT f.*, s.nome as setor_nome FROM funcionario f " +

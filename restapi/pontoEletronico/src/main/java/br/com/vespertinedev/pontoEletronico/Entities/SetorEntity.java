@@ -8,6 +8,8 @@ public class SetorEntity {
         this.id = id;
         this.nome = nome;
     }
+    
+    public SetorEntity(){}
 
     public Long getId() {
         return id;

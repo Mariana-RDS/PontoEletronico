@@ -3,6 +3,7 @@ package br.com.vespertinedev.pontoEletronico.Repositories;
 
 import br.com.vespertinedev.pontoEletronico.Entities.FuncionarioEntity;
 import br.com.vespertinedev.pontoEletronico.Entities.RegistroPontoEntity;
+import br.com.vespertinedev.pontoEletronico.Entities.SetorEntity;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,10 +16,12 @@ public class FacadeRepository {
 
     private GenericRepository<FuncionarioEntity, Integer> rFuncionario = null;
     private GenericRepository<RegistroPontoEntity, Integer> rRegistroPonto = null;
+    private GenericRepository<SetorEntity, Integer> rSetor = null;
 
     private FacadeRepository(){
         this.rRegistroPonto = new RegistroPontoRepository();
         this.rFuncionario = new FuncionarioRepository();
+        this.rSetor = new SetorRepository();
     }
 
     public static FacadeRepository getCurrentInstance(){
@@ -44,6 +47,10 @@ public class FacadeRepository {
     public List<FuncionarioEntity> readAllFuncionarios() throws SQLException {
         List<FuncionarioEntity> funcionarios = ((FuncionarioRepository) this.rFuncionario).readAll();
         return (funcionarios != null) ? funcionarios : new ArrayList<>();
+    }
+
+    public List<SetorEntity> readSetor() throws SQLException {
+        return ((SetorRepository) this.rSetor).readAll();
     }
 
 

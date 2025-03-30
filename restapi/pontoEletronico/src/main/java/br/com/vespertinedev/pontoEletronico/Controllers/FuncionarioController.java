@@ -4,23 +4,23 @@ import java.sql.SQLException;
 import java.util.List;
 
 import br.com.vespertinedev.pontoEletronico.Entities.FuncionarioEntity;
+import br.com.vespertinedev.pontoEletronico.Entities.SetorEntity;
 import br.com.vespertinedev.pontoEletronico.Repositories.FacadeRepository;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class FuncionarioController {
 
     @GetMapping("/funcionario")
     public  List<FuncionarioEntity> readAll() throws SQLException{
         return FacadeRepository.getCurrentInstance().readAllFuncionarios();
+    }
+
+    @GetMapping("/setores")
+    public  List<SetorEntity> readAllSetores() throws SQLException{
+        return FacadeRepository.getCurrentInstance().readSetor();
     }
 
     @GetMapping("/funcionario/{id}")
@@ -48,5 +48,7 @@ public class FuncionarioController {
     public void delete(@PathVariable int id) throws SQLException{
         FacadeRepository.getCurrentInstance().deleteFuncionario(id);
     }
+
+
 
 }

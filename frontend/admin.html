@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Vespertine - Administração</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f4f4f4;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            width: 100%;
+            background: #007b7f;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .navbar a:hover {
+            background: #005f5f;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007b7f;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #005f5f;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="landing.html">Home</a>
+        <h2 style="color: white;">Administração</h2>
+    </div>
+
+    <div class="container">
+        <h3 style="text-align: center; margin-bottom: 20px;">Cadastro de Funcionário</h3>
+        <form id="cadastroFuncionarioForm">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="setor">Setor:</label>
+                <select id="setor" name="setor" required>
+                    <option value="">Selecione um setor</option>
+                </select>
+            </div>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <div id="message" class="message" style="display: none;"></div>
+    </div>
+
+    <script>
+        async function carregarSetores() {
+            try {
+                const response = await fetch('http://localhost:8080/api/setores');
+                if (!response.ok) throw new Error("Erro ao carregar setores");
+
+                const setores = await response.json();
+                const selectSetor = document.getElementById('setor');
+                setores.forEach(setor => {
+                    const option = document.createElement('option');
+                    option.value = setor.id;
+                    option.textContent = setor.nome;
+                    selectSetor.appendChild(option);
+                });
+            } catch (error) {
+                console.error(error);
+                alert("Erro ao carregar setores");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarSetores();
+
+            const form = document.getElementById('cadastroFuncionarioForm');
+            const messageDiv = document.getElementById('message');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const nome = document.getElementById('nome').value;
+                const email = document.getElementById('email').value;
+                const setorId = document.getElementById('setor').value;
+
+                const payload = {
+                    nome,
+                    email,
+                    setor: { id: setorId }
+                };
+
+                try {
+                    const response = await fetch('http://localhost:8080/api/funcionario', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error("Erro ao cadastrar funcionário");
+
+                    messageDiv.textContent = "Funcionário cadastrado com sucesso!";
+                    messageDiv.className = "message success";
+                    messageDiv.style.display = "block";
+                    form.reset();
+                } catch (error) {
+                    messageDiv.textContent = "Erro ao cadastrar funcionário!";
+                    messageDiv.className = "message error";
+                    messageDiv.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+    
+</body>
+</html>
